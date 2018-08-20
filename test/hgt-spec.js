@@ -57,7 +57,7 @@ test('can query hgt bicubic near the tileset border', function(t) {
     });
 
     almostEqual(t, hgt.getElevation([48, 7]), 774);
-    almostEqual(t, hgt.getElevation([48.9999, 7.9999]), 162.743122034);
+    almostEqual(t, hgt.getElevation([48.9999, 7.9999]), 162.770343591);
 
     hgt.destroy();
     t.end();

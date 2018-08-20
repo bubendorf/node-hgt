@@ -97,7 +97,7 @@ Hgt.bicubic = function(row, col) {
         v0 = cubic(v00, v01, v02, v03, colFrac),
         v1 = cubic(v10, v11, v12, v13, colFrac),
         v2 = cubic(v20, v21, v22, v23, colFrac),
-        v3 = cubic(v30, v30, v30, v30, colFrac);
+        v3 = cubic(v30, v31, v32, v33, colFrac);
 
     return cubic(v0, v1, v2, v3, rowFrac);
 };
@@ -123,6 +123,7 @@ Hgt.prototype.getElevation = function(latLng) {
 Hgt.prototype._rowCol = function(row, col) {
     var size = this._size;
 //	console.log("Pre  row=" + row + ", col=" + col + ", size=" + size);
+// Prevent OutOfBounds problems: Not perfect, but good enough
     row = Math.min(Math.max(row, 0), size - 1);
     col = Math.min(Math.max(col, 0), size - 1);
 //	console.log("Post row=" + row + ", col=" + col);
