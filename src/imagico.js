@@ -14,6 +14,7 @@ function ImagicoElevationDownloader(cacheDir, options) {
 }
 
 ImagicoElevationDownloader.prototype.download = function(tileKey, latLng, cb) {
+console.log('ImagicoElevationDownloader.download(' + tileKey + ', ' + JSON.stringify(latLng) + ')');
     var cleanup = function() {
             delete this._downloads[tileKey];
             fs.unlinkSync(tempPath);
@@ -29,7 +30,9 @@ ImagicoElevationDownloader.prototype.download = function(tileKey, latLng, cb) {
                     throw new Error('No tiles found for latitude ' + latLng.lat + ', longitude ' + latLng.lng);
                 }
 
+console.log('Found ' + JSON.stringify(tileZips));
                 tempPath = path.join(os.tmpdir(), tileZips[0].name);
+console.log('Download ' + tileZips[0].link + ' to ' + tempPath);
                 stream = fs.createWriteStream(tempPath);
                 return this._download(tileZips[0].link, stream);
             }.bind(this))
@@ -54,6 +57,11 @@ ImagicoElevationDownloader.prototype.download = function(tileKey, latLng, cb) {
 ImagicoElevationDownloader.prototype.search = function(latLng) {
     var ll = _latLng(latLng);
     return new Promise(function(fulfill, reject) {
+
+console.log('Search http://www.imagico.de/map/dem_json.php?date=&lon=' +
+            ll.lng + '&lat=' + ll.lat + '&lonE=' + ll.lng +
+            '&latE=' + ll.lat + '&vf=1');
+
         request('http://www.imagico.de/map/dem_json.php?date=&lon=' +
             ll.lng + '&lat=' + ll.lat + '&lonE=' + ll.lng +
             '&latE=' + ll.lat + '&vf=1', function(err, response, body) {
@@ -84,6 +92,7 @@ ImagicoElevationDownloader.prototype._download = function(url, stream) {
 };
 
 ImagicoElevationDownloader.prototype._unzip = function(zipPath, targetPath) {
+console.log('Unzip ' + zipPath + ' to ' + targetPath);
     return new Promise(function(fulfill, reject) {
         var unzips = [];
 
@@ -101,11 +110,16 @@ ImagicoElevationDownloader.prototype._unzip = function(zipPath, targetPath) {
                     var lastSlashIdx = entry.fileName.lastIndexOf('/'),
                         fileName = entry.fileName.substr(lastSlashIdx + 1),
                         filePath = path.join(targetPath, fileName);
+console.log('Unzipping ' + entry.fileName + ' to ' + filePath);
                     if (err) {
                         reject(err);
                         return;
                     }
 
+                    if (fs.existsSync(filePath)) {
+                        console.log('File already exists. Skipping it.');
+                        return;
+                    }
                     unzips.push(new Promise(function(fulfill, reject) {
                         readStream.on('end', fulfill);
                         readStream.on('error', reject);

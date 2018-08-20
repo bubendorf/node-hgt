@@ -54,6 +54,7 @@ TileSet.prototype.getElevation = function(latLng, cb) {
 };
 
 TileSet.prototype._loadTile = function(tileKey, latLng, cb) {
+console.log('TileSet.loadTile(' + tileKey + ', ' + JSON.stringify(latLng) + ')');
     var loadQueue = this._loadingTiles[tileKey];
 
     if (!loadQueue) {

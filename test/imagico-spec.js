@@ -19,7 +19,7 @@ test('can download file', function(t) {
     }
 
     var dler = new ImagicoElevationDownloader(__dirname + '/data/');
-    dler.download('N57E011', [57.7, 11.9], function(err) {
+    dler.download('N47E007', [47.7, 7.9], function(err) {
         if (!err) {
             t.pass('file was downloaded successfully.');
         } else {

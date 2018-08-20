@@ -38,3 +38,27 @@ test('can query hgt bilinear', function(t) {
     hgt.destroy();
     t.end();
 });
+
+test('can query hgt bilinear near the tileset border', function(t) {
+    var hgt = new Hgt(__dirname + '/data/N48E007.hgt', [48, 7], {
+        interpolation: Hgt.bilinear
+    });
+
+    almostEqual(t, hgt.getElevation([48, 7]), 774);
+    almostEqual(t, hgt.getElevation([48.9999, 7.9999]), 162.5088);
+
+    hgt.destroy();
+    t.end();
+});
+
+test('can query hgt bicubic near the tileset border', function(t) {
+    var hgt = new Hgt(__dirname + '/data/N48E007.hgt', [48, 7], {
+        interpolation: Hgt.bicubic
+    });
+
+    almostEqual(t, hgt.getElevation([48, 7]), 774);
+    almostEqual(t, hgt.getElevation([48.9999, 7.9999]), 162.743122034);
+
+    hgt.destroy();
+    t.end();
+});
