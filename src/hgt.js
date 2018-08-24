@@ -1,6 +1,7 @@
 var fs = require('fs'),
     extend = require('extend'),
-    _latLng = require('./latlng');
+    _latLng = require('./latlng'),
+	spline = require('cubic-spline');
 
 function Hgt(path, swLatLng, options) {
     var fd = fs.openSync(path, 'r'),
@@ -93,14 +94,56 @@ Hgt.bicubic = function(row, col) {
         v31 = this._rowCol(rowLow + 2, colLow),
         v32 = this._rowCol(rowLow + 2, colLow + 1),
         v33 = this._rowCol(rowLow + 2, colLow + 2),
-
         v0 = cubic(v00, v01, v02, v03, colFrac),
         v1 = cubic(v10, v11, v12, v13, colFrac),
         v2 = cubic(v20, v21, v22, v23, colFrac),
         v3 = cubic(v30, v31, v32, v33, colFrac);
 
-    return cubic(v0, v1, v2, v3, rowFrac);
+/*		console.log('row=' + row + ' col=' + col);
+		console.log('v00=' + v00 + ', v01=' + v01 + ', v02=' + v02 + ', v03=' + v03 + ' ==> v0=' + v0);
+		console.log('v10=' + v10 + ', v11=' + v11 + ', v12=' + v12 + ', v13=' + v13 + ' ==> v1=' + v1);
+		console.log('v20=' + v20 + ', v21=' + v21 + ', v22=' + v22 + ', v23=' + v23 + ' ==> v2=' + v2);
+		console.log('v30=' + v30 + ', v31=' + v31 + ', v32=' + v32 + ', v33=' + v33 + ' ==> v3=' + v3);*/
+		
+/*		var h0 = cubic(v00, v10, v20, v30, rowFrac),
+        h1 = cubic(v01, v11, v21, v31, rowFrac),
+        h2 = cubic(v02, v12, v22, v32, rowFrac),
+        h3 = cubic(v03, v13, v23, v33, rowFrac),
+        vv =  cubic(v0, v1, v2, v3, rowFrac),
+        hh =  cubic(h0, h1, h2, h3, colFrac);		
+		console.log('vv=' + vv + ', hh=' + hh);*/
+		
+		return cubic(v0, v1, v2, v3, rowFrac);
 };
+
+Hgt.spline = function(row, col) {
+        const rowLow = Math.floor(row);
+        const rowFrac = row - rowLow;
+        const colLow = Math.floor(col);
+        const colFrac = col - colLow;
+		
+		const points = 8;
+		
+		var xr = [];
+		var yr = [];
+		for (rowIndex = rowLow - points / 2 + 1; rowIndex <= rowLow + points / 2; rowIndex++) {
+			
+			var xc = [];
+			var yc = [];
+			for (colIndex = colLow - points / 2 + 1; colIndex <= colLow + points / 2; colIndex++) {			
+				var height = this._rowCol(rowIndex, colIndex);
+//				console.log('height=' + height);
+				xc.push(colIndex);
+				yc.push(height);
+			}
+			var rowHeight = spline(col, xc, yc);
+//			console.log('rowHeight=' + rowHeight);
+			xr.push(rowIndex);
+			yr.push(rowHeight);
+		}
+		
+		return spline(row, xr, yr);
+}
 
 Hgt.prototype.destroy = function() {
     delete this._buffer;

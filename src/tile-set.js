@@ -37,7 +37,6 @@ TileSet.prototype.getElevation = function(latLng, cb) {
         ll = _latLng(latLng),
         key = tileKey(ll),
         tile = this._tileCache.get(key);
-
     if (tile) {
         setImmediate(function() {
             getTileElevation(tile, ll);
@@ -54,10 +53,10 @@ TileSet.prototype.getElevation = function(latLng, cb) {
 };
 
 TileSet.prototype._loadTile = function(tileKey, latLng, cb) {
-console.log('TileSet.loadTile(' + tileKey + ', ' + JSON.stringify(latLng) + ')');
     var loadQueue = this._loadingTiles[tileKey];
 
     if (!loadQueue) {
+        console.log('TileSet.loadTile(' + tileKey + ', ' + JSON.stringify(latLng) + ')');
         loadQueue = [];
         this._loadingTiles[tileKey] = loadQueue;
         this.options.loadTile.call(this, this._tileDir, latLng, function(err, tile) {
@@ -65,6 +64,7 @@ console.log('TileSet.loadTile(' + tileKey + ', ' + JSON.stringify(latLng) + ')')
             if(!err) {
                 this._tileCache.set(tileKey, tile);
             }
+            console.log('TileSet.loadedTile(' + tileKey + ')');
             q.forEach(function(cb) {
                 if (err) {
                     cb(err);

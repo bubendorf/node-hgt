@@ -1,5 +1,7 @@
 var Hgt = require('../').Hgt,
-    hgt = new Hgt(__dirname + '/data/N57E011.hgt', [57, 11]),
+    hgt = new Hgt(__dirname + '/data/N57E011.hgt', [57, 11], {
+        interpolation: Hgt.bilinear
+		}),
     warmupRounds = 10000000,
     testRounds = 10000000,
     start,
