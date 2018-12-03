@@ -26,6 +26,8 @@
     "lru-cache": "^4.0.1",
     "promise": "^8.0.0",
     "request": "^2.88.0",
+    "minimist": "^1.2.0",
+    "sqlite3": "^4.0.4",
     "yauzl": "^2.2.1"
   },
   "devDependencies": {
