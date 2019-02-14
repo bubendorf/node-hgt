@@ -32,6 +32,7 @@ const tiles = new TileSet(tilesPath, {
 const dbPath = argv.database ? argv.database : 'C:/Users/Markus/AppData/Roaming/GSAK8/data/Default/sqlite.db3';
 fs.accessSync(dbPath, fs.constants.R_OK | fs.constants.W_OK);
 const db = new sqlite3.Database(dbPath);
+db.run('PRAGMA journal_mode = MEMORY;');
 console.log('Connected to the database at ' + dbPath);
 
 let updateCount = 0;
@@ -40,21 +41,23 @@ async function updateElevation(row) {
 	if (argv.verbose) {
 		console.log('Processing ' + row.Code + ' (' + row.Latitude + ', ' + row.Longitude + ')');
 	}
-	tiles.getElevation([row.Latitude, row.Longitude], function (err, elevation) {
-		if (err) {
-			console.log('Error: ' + JSON.stringify(err));
-		} else {
-//        console.log('[' + Number(row.Latitude).toFixed(6) + ", " + Number(row.Longitude).toFixed(6) + " ==> " +  elevation.toFixed(1) + "m");
-			const ele = elevation.toFixed(1);
-			if (argv.force || ele !== row.Elevation || row.Resolution !== 'GCRouter') {
-				console.log('Update ' + row.Code + ' from ' + row.Elevation + 'm to ' + ele + 'm');
-				let sqlUpdate = "update Caches set Elevation=" + ele + ", Resolution='GCRouter' where code='" + row.Code + "';";
-//                console.log(sqlUpdate);
-				db.run(sqlUpdate);
-				updateCount++;
+	if (row.Latitude != 0.0 && row.Longitude != 0.0) {
+		tiles.getElevation([row.Latitude, row.Longitude], function (err, elevation) {
+			if (err) {
+				console.log('Error: ' + JSON.stringify(err));
+			} else {
+	//        console.log('[' + Number(row.Latitude).toFixed(6) + ", " + Number(row.Longitude).toFixed(6) + " ==> " +  elevation.toFixed(1) + "m");
+				const ele = elevation.toFixed(1);
+				if (argv.force || ele !== row.Elevation || row.Resolution !== 'GCRouter') {
+					console.log('Update ' + row.Code + ' from ' + row.Elevation + 'm to ' + ele + 'm');
+					let sqlUpdate = "update Caches set Elevation=" + ele + ", Resolution='GCRouter' where code='" + row.Code + "';";
+	//                console.log(sqlUpdate);
+					db.run(sqlUpdate);
+					updateCount++;
+				}
 			}
-		}
-	});
+		});
+	}
 }
 
 async function updateAllRows(rows) {
