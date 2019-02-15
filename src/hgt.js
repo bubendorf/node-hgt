@@ -20,6 +20,9 @@ function Hgt(path, swLatLng, options) {
         } else if (stat.size === 1442401 * 2) {
             this._resolution = 3;
             this._size = 1201;
+        } else if (stat.size === 0) {
+            this._resolution = 0;
+            this._size = 0;
         } else {
             throw new Error('Unknown tile format (1 arcsecond and 3 arcsecond supported).');
         }
@@ -127,10 +130,10 @@ Hgt.spline = function(row, col) {
 		var xr = [];
 		var yr = [];
 		for (rowIndex = rowLow - points / 2 + 1; rowIndex <= rowLow + points / 2; rowIndex++) {
-			
+
 			var xc = [];
 			var yc = [];
-			for (colIndex = colLow - points / 2 + 1; colIndex <= colLow + points / 2; colIndex++) {			
+			for (colIndex = colLow - points / 2 + 1; colIndex <= colLow + points / 2; colIndex++) {
 				var height = this._rowCol(rowIndex, colIndex);
 //				console.log('height=' + height);
 				xc.push(colIndex);
@@ -141,7 +144,7 @@ Hgt.spline = function(row, col) {
 			xr.push(rowIndex);
 			yr.push(rowHeight);
 		}
-		
+
 		return spline(row, xr, yr);
 }
 
@@ -150,6 +153,9 @@ Hgt.prototype.destroy = function() {
 };
 
 Hgt.prototype.getElevation = function(latLng) {
+    if (this._size == 0) {
+	return 0;
+    }
     var size = this._size - 1,
         ll = _latLng(latLng),
         row = (ll.lat - this._swLatLng.lat) * size,
