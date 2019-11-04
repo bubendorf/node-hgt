@@ -22,16 +22,16 @@
   "license": "ISC",
   "dependencies": {
     "cubic-spline": "^1.0.4",
-    "extend": "^3.0.0",
-    "lru-cache": "^4.0.1",
-    "promise": "^8.0.0",
-    "request": "^2.88.0",
+    "extend": "^3.0.2",
+    "lru-cache": "^4.1.5",
     "minimist": "^1.2.0",
-    "sqlite3": "^4.0.4",
-    "yauzl": "^2.2.1"
+    "promise": "^8.0.3",
+    "request": "^2.88.0",
+    "sqlite3": "^4.1.0",
+    "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "tap-spec": "^5.0.0",
-    "tape": "^4.9.1"
+    "tape": "^4.11.0"
   }
 }

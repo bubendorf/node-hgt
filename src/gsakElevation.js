@@ -48,9 +48,9 @@ async function updateElevation(row) {
 			} else {
 	//        console.log('[' + Number(row.Latitude).toFixed(6) + ", " + Number(row.Longitude).toFixed(6) + " ==> " +  elevation.toFixed(1) + "m");
 				const ele = elevation.toFixed(1);
-				if (argv.force || ele !== row.Elevation || row.Resolution !== 'GCRouter') {
+				if (argv.force || ele !== row.Elevation || row.Resolution !== 'USER') {
 					console.log('Update ' + row.Code + ' from ' + row.Elevation + 'm to ' + ele + 'm');
-					let sqlUpdate = "update Caches set Elevation=" + ele + ", Resolution='GCRouter' where code='" + row.Code + "';";
+					let sqlUpdate = "update Caches set Elevation=" + ele + ", Resolution='USER' where code='" + row.Code + "';";
 	//                console.log(sqlUpdate);
 					db.run(sqlUpdate);
 					updateCount++;
@@ -67,7 +67,7 @@ async function updateAllRows(rows) {
 async function updateAll() {
 	let sql = "select Code, Latitude, Longitude, Elevation from Caches";
 	if (!argv.force) {
-	  sql = sql + " where Resolution <> 'GCRouter'";
+	  sql = sql + " where Resolution <> 'USER'";
 	}
 	sql = sql + " order by round(Latitude-0.5), Longitude+0.0;";
 

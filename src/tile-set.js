@@ -64,7 +64,8 @@ TileSet.prototype._loadTile = function(tileKey, latLng, cb) {
             if(!err) {
                 this._tileCache.set(tileKey, tile);
             }
-            console.log('TileSet.loadedTile(' + tileKey + '), Resolution: ' + tile._resolution);
+//            console.log('TileSet.loadedTile(' + tileKey + '), Resolution: ' + tile._resolution);
+            console.log('TileSet.loadedTile(' + tileKey + ')');
             q.forEach(function(cb) {
                 if (err) {
                     cb(err);

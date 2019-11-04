@@ -1,7 +1,7 @@
 var test = require('tape'),
     almostEqual = function(t, actual, expected, delta, msg) {
         var d = Math.abs(actual - expected);
-        delta = delta || 1e-9;
+        delta = delta || 1e-3;
         if (d > delta) {
             t.equal(actual, expected, msg);
         } else {
@@ -17,8 +17,8 @@ test('can interpolate using splines', function(t) {
         interpolation: Hgt.spline
     });
 
-    almostEqual(t, hgt.getElevation([46.09403, 7.85883]), 4530.850639047);
-    almostEqual(t, hgt.getElevation([46.0940278, 7.8587501]), 4528.500760585);
+    almostEqual(t, hgt.getElevation([46.09403, 7.85883]), 4530.837);
+    almostEqual(t, hgt.getElevation([46.0940278, 7.8587501]), 4528.484);
 
     hgt.destroy();
     t.end();
