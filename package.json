@@ -27,11 +27,11 @@
     "minimist": "^1.2.0",
     "promise": "^8.0.3",
     "request": "^2.88.0",
-    "sqlite3": "^4.1.0",
+    "sqlite3": "^4.1.1",
     "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "tap-spec": "^5.0.0",
-    "tape": "^4.11.0"
+    "tape": "^4.13.0"
   }
 }
